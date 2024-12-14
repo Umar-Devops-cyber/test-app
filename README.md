@@ -164,28 +164,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the code
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Set up JDK
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin'  # Add this line to specify the JDK distribution
+    # Cache Gradle dependencies
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle
 
+    # Build the project
     - name: Build with Gradle
       run: ./gradlew build
 
+    # Build Docker image
     - name: Build Docker image
-      run: docker build -t <your-dockerhub-username>/my-web-app .
+      run: docker build -t umerbloch/my-web-app .
 
+    # Log in to DockerHub
     - name: Log in to DockerHub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    # Push Docker image to DockerHub
     - name: Push Docker image
-      run: docker push <your-dockerhub-username>/my-web-app
+      run: docker push umerbloch/my-web-app
 ```
 
 - **Explanation**:
