@@ -35,7 +35,7 @@ jobs:
 
     # Build Docker image
     - name: Build Docker image
-      run: docker build -t /my-web-app .
+      run: docker build -t umerbloch/my-web-app .
 
     # Log in to DockerHub
     - name: Log in to DockerHub
